@@ -1,22 +1,25 @@
 from fastapi import FastAPI
-import uvicorn
-import torch
-import tensorflow as tf
-from pydantic import BaseModel
-git 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(
     title="ML Model Serving API",
     description="Production-ready API for serving ML models",
-    version="0.1.0"
+    version="1.0.0"
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allows all frontend domains (for development)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/health")
-def health_check():
-    return {
-        "status": "healthy",
-        "torch_version": torch.__version__,
-        "tensorflow_version": tf.__version__
-    }
+async def health_check():
+    return {"status": "healthy"}
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
